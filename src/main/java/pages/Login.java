@@ -1,5 +1,6 @@
 package pages;
 
+//класс регистрации аренды самоката
 public class Login {
     private String name;
     private String surname;
@@ -15,22 +16,27 @@ public class Login {
         this.telephoneNumber = telephoneNumber;
     }
 
+    //Имя пользователя
     public String getName() {
         return name;
     }
 
+    //Фамилия пользователя
     public String getSurname() {
         return surname;
     }
 
+    //Адрес доставки заказа
     public String getAddress() {
         return address;
     }
 
+    //Станция метро
     public String getMetroStation() {
         return metroStation;
     }
 
+    //Номер телефона пользователя
     public String getTelephoneNumber() {
         return telephoneNumber;
     }

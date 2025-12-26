@@ -1,30 +1,29 @@
-import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.openqa.selenium.By;
 import pages.MainPage;
 import pages.Login;
 
-import static org.hamcrest.CoreMatchers.containsString;
+import java.util.function.Consumer;
+
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class OrderTest extends BaseTest {
-    private final By orderBtnPoint;
+    private final Consumer<MainPage> clickBtn;
     private final Login login;
 
-    public OrderTest(By orderBtnPoint, Login login) {
-        this.orderBtnPoint = orderBtnPoint;
+    public OrderTest(Consumer<MainPage> clickBtn, Login login) {
+        this.clickBtn = clickBtn;
         this.login = login;
 
     }
 
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name = "Кнопка {0}:")
     public static Object[][] testLogin() {
         return new Object[][]{
-                {MainPage.getOrderBtnFirstPoint(), new Login("Анастасия", "Пугалова", "проспект Мира, 176", "ВДНХ", "89112345789")},
-                {MainPage.getOrderBtnSecondPoint(), new Login("Захар", "Любимов", "Хорошёвское шоссе, 5к2", "Беговая", "89281234567")}
+                {(Consumer<MainPage>) (MainPage::clickOrderBtnFirstPoint), new Login("Анастасия", "Пугалова", "проспект Мира, 176", "ВДНХ", "89112345789")},
+                {(Consumer<MainPage>) (MainPage::clickOrderBtnSecondPoint), new Login("Захар", "Любимов", "Хорошёвское шоссе, 5к2", "Беговая", "89281234567")}
         };
     }
 
@@ -32,32 +31,15 @@ public class OrderTest extends BaseTest {
     @Test
     public void orderTest() {
         mainPage.openPage();
-        mainPage.checkCookieButton();
-        driver.findElement(orderBtnPoint).click();
-        orderPage.clickFieldName();
-        orderPage.inputFieldName(login.getName());
-        orderPage.clickFieldSurname();
-        orderPage.inputFieldSurname(login.getSurname());
-        orderPage.clickFieldAddress();
-        orderPage.inputFieldAddress(login.getAddress());
-        orderPage.clickFieldMetroStation();
-        orderPage.inputFieldMetroStation(login.getMetroStation());
-        orderPage.clickFieldStationList();
-        orderPage.clickFieldTelephoneNumber();
-        orderPage.inputFieldTelephoneNumber(login.getTelephoneNumber());
-        orderPage.clickNextBtn();
-        orderPage.clickFieldDate();
-        orderPage.clickCalendarDate();
-        orderPage.clickFieldLeasing();
-        orderPage.clickNumberOfDays();
-        orderPage.clickCheckboxColorScooter();
-        orderPage.clickOrderBtn();
+        clickBtn.accept(mainPage);
+        orderPage.fillFirstForm(login.getName(), login.getSurname(), login.getAddress(), login.getMetroStation(), login.getTelephoneNumber());
+        orderPage.fillSecondForm();
         orderPage.waitBtnYes();
         orderPage.clickBtnYes();
-        orderPage.waitPopup();
+        orderPage.waitSuccessfulOrder();
 
-        assertTrue("Всплывающее окно не появилось", orderPage.getPopupSuccessfulOrder().isDisplayed());
-        MatcherAssert.assertThat("Сообщения об успешном создании заказе нет", orderPage.getMessageSuccessfulOrder(), containsString(orderPage.getExpectedMessage()));
+        assertTrue("Всплывающее окно не появилось", orderPage.getSuccessfulOrder().isDisplayed());
+        assertTrue("Сообщения об успешном создании заказе нет", orderPage.getMessageSuccessfulOrder().contains("Заказ оформлен"));
     }
 }
 

@@ -16,11 +16,8 @@ public class LogoTest extends BaseTest {
     @Test
     public void yandexLogoTest() {
         mainPage.openPage();
-        mainPage.saveWindow();
         mainPage.clickYandexLogo();
-        mainPage.waitWindowYandex();
-        mainPage.newWindowYandex();
-        mainPage.waitUrlYandex();
+        mainPage.waitUrl("dzen");
 
         assertTrue("Не открылся сайт Яндекс", mainPage.getActualUrlYandex().contains("dzen.ru"));
     }

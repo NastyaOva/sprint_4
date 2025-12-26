@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+//Класс страницы статуса заказа
 public class OrderNumberPage {
 
     private WebDriver driver;
@@ -19,13 +20,14 @@ public class OrderNumberPage {
         this.driver = driver;
     }
 
-    public WebElement getImg() {
-        WebElement errorImg = driver.findElement(By.cssSelector("img[alt='Not found']"));
-        return errorImg;
-    }
-
+    //Ожидаем пока появится ошибка об отсутствии заказа
     public void waitVisibilityImg() {
         new WebDriverWait(driver, Duration.ofSeconds(3)).until(ExpectedConditions.visibilityOfElementLocated(imgResult));
     }
 
+    //Метод возвращает изображение ошибки об отсутствии заказа (необходимо для проверки)
+    public WebElement getImg() {
+        WebElement errorImg = driver.findElement(imgResult);
+        return errorImg;
+    }
 }

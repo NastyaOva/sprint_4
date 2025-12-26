@@ -8,165 +8,207 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+//Класс страницы оформления заказа самоката
 public class OrderPage {
 
     private WebDriver driver;
 
-    //поле "Имя"
+    //Поле "Имя"
     private By fieldName = By.xpath(".//input[@placeholder='* Имя']");
 
-    //поле "Фамилия"
+    //Поле "Фамилия"
     private By fieldSurname = By.xpath(".//input[@placeholder='* Фамилия']");
 
-    //поле "Адрес"
+    //Поле "Адрес: куда привести заказ"
     private By fieldAddress = By.xpath(".//input[@placeholder='* Адрес: куда привезти заказ']");
 
-    //поле "Станция метро"
+    //Поле "Станция метро"
     private By fieldMetroStation = By.xpath(".//input[@placeholder='* Станция метро']");
 
-    //выпадающий список станций метро
+    //Раскрывающийся список станций метро
     private By stationList = By.cssSelector(".select-search__select");
 
-    //поле "Телефон"
+    //Поле "Телефон: на него позвонит курьер"
     private By fieldTelephoneNumber = By.xpath(".//input[@placeholder='* Телефон: на него позвонит курьер']");
 
-    //кнопка "Далее"
+    //Кнопка "Далее"
     private By nextBtn = By.cssSelector(".Button_Button__ra12g.Button_Middle__1CSJM");
 
-    //поле "Дата аренды"
+    //Поле "Когда привезти самокат"
     private By fieldDate = By.xpath(".//input[@placeholder='* Когда привезти самокат']");
 
-    //кнопка в календаре при выборе даты аренды (дата - 17.12.25)
+    //Кнопка в календаре при выборе даты аренды (дата - 17.12.25)
     private By calendarDate = By.xpath(".//div[@aria-label='Choose среда, 17-е декабря 2025 г.']");
 
-    //поле "Срок аренды"
+    //Поле "Срок аренды"
     private By fieldLeasing = By.className("Dropdown-placeholder");
 
-    //выпадающий список "Срок аренды" (двое суток)
+    //Раскрывающийся список "Срок аренды" (двое суток)
     private By numberOfDays = By.xpath(".//div[text()='двое суток']");
 
-    //чекбокс "Цвет самоката" (черный жемчуг)
+    //Чекбокс "Цвет самоката" (черный жемчуг)
     private By checkboxColorScooter = By.id("black");
 
-    //кнопка "Заказать"
+    //Кнопка "Заказать"
     private By orderBtn = By.xpath(".//button[contains(@class, 'Button_Middle__1CSJM') and text() = 'Заказать']");
 
-    //кнопка "Да" во всплывающем окне "Хотите оформить заказ?"
+    //Кнопка "Да" во всплывающем окне "Хотите оформить заказ?"
     private By btnYes = By.xpath(".//button[text() = 'Да']");
 
-    //сообщение об успешном оформлении заказа
+    //Сообщение об успешном оформлении заказа
     private By messageSuccessfulOrder = By.xpath(".//div[@class = 'Order_ModalHeader__3FDaJ']");
 
-    //ОР сообщения об успешном оформлении заказа
-    private final String EXPECTED_MESSAGE = "Заказ оформлен";
-
-    //Доп. задания
-    //логотип "Самокат"
+    //Логотип "Самокат"
     private By scooterLogo = By.className("Header_LogoScooter__3lsAR");
 
     public OrderPage(WebDriver driver) {
         this.driver = driver;
     }
 
-
+    //Нажимаем на поле "Имя"
     public void clickFieldName() {
         driver.findElement(fieldName).click();
     }
 
+    //Вводим имя в поле "Имя"
     public void inputFieldName(String name) {
         driver.findElement(fieldName).sendKeys(name);
     }
 
+    //Нажимаем на поле "Фамилия"
     public void clickFieldSurname() {
         driver.findElement(fieldSurname).click();
     }
 
+    //Вводим фамилию в поле "Фамилия"
     public void inputFieldSurname(String surname) {
         driver.findElement(fieldSurname).sendKeys(surname);
     }
 
+    //Нажимаем на поле "Адрес: куда привести заказ"
     public void clickFieldAddress() {
         driver.findElement(fieldAddress).click();
     }
 
+    //Вводим адрес доставки в поле "Адрес: куда привести заказ"
     public void inputFieldAddress(String address) {
         driver.findElement(fieldAddress).sendKeys(address);
     }
 
+    //Нажимаем на поле "Станция метро"
     public void clickFieldMetroStation() {
         driver.findElement(fieldMetroStation).click();
     }
 
+    //Вводим станцию метро в поле "Станция метро"
     public void inputFieldMetroStation(String metroStation) {
         driver.findElement(fieldMetroStation).sendKeys(metroStation);
     }
 
+    //Нажимаем на станцию метро в раскрывающемся списке
     public void clickFieldStationList() {
         driver.findElement(stationList).click();
     }
 
+    //Нажимаем на поле "Телефон: на него позвонит курьер"
     public void clickFieldTelephoneNumber() {
         driver.findElement(fieldTelephoneNumber).click();
     }
 
+    //Вводим номер телефона в поле "Телефон: на него позвонит курьер"
     public void inputFieldTelephoneNumber(String telephoneNumber) {
         driver.findElement(fieldTelephoneNumber).sendKeys(telephoneNumber);
     }
 
+    //Нажимаем на кнопку "Далее"
     public void clickNextBtn() {
         driver.findElement(nextBtn).click();
     }
 
+    //Объединение методов для заполнения информации в первую форму аренды самоката
+    public void fillFirstForm(String name, String surname, String address, String metroStation, String telephoneNumber) {
+        inputFieldName(name);
+        clickFieldName();
+        inputFieldSurname(surname);
+        clickFieldSurname();
+        inputFieldAddress(address);
+        clickFieldAddress();
+        inputFieldMetroStation(metroStation);
+        clickFieldStationList();
+        clickFieldMetroStation();
+        inputFieldTelephoneNumber(telephoneNumber);
+        clickFieldTelephoneNumber();
+        clickNextBtn();
+    }
+
+    //Нажимаем на поле "Когда привести самокат"
     public void clickFieldDate() {
         driver.findElement(fieldDate).click();
     }
 
+    //Нажимаем на дату аренды (дата - 17.12.25)
     public void clickCalendarDate() {
         driver.findElement(calendarDate).click();
     }
 
+    //Нажимаем на поле "Срок аренды"
     public void clickFieldLeasing() {
         driver.findElement(fieldLeasing).click();
     }
 
+    //Нажимаем в раскрывающемся списке на кол-во суток аренды (двое суток)
     public void clickNumberOfDays() {
         driver.findElement(numberOfDays).click();
     }
 
+    //Отмечаем выбор цвета самоката на чекбоксе (чёрный жемчуг)
     public void clickCheckboxColorScooter() {
         driver.findElement(checkboxColorScooter).click();
     }
 
+    //Нажимаем на кнопку "Заказать", расположенную под формой аренды самоката
     public void clickOrderBtn() {
         driver.findElement(orderBtn).click();
     }
 
+    //Объединение методов для заполнения информации во вторую форму аренды самоката
+    public void fillSecondForm() {
+        clickFieldDate();
+        clickCalendarDate();
+        clickFieldLeasing();
+        clickNumberOfDays();
+        clickCheckboxColorScooter();
+        clickOrderBtn();
+    }
+
+    //Ожидаем появление окна "Хотите оформить заказ?", а точнее кнопки "Да" в данном окне
     public void waitBtnYes() {
         new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(btnYes));
     }
 
+    //Нажимаем на кнопку "Да"
     public void clickBtnYes() {
         driver.findElement(btnYes).click();
     }
 
-    public void waitPopup() {
+    //Ожидаем появление окна "Заказ оформлен", а точнее сообщение об успешном заказе
+    public void waitSuccessfulOrder() {
         new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(messageSuccessfulOrder));
     }
 
-    public WebElement getPopupSuccessfulOrder() {
-        WebElement popup = driver.findElement(messageSuccessfulOrder);
-        return popup;
-    }
-
-    public String getExpectedMessage() {
-        return EXPECTED_MESSAGE;
-    }
-
-    public String getMessageSuccessfulOrder() {
-        String message = driver.findElement(messageSuccessfulOrder).getText();
+    //Метод возвращает сообщение об успешном заказе (необходимо для проверки)
+    public WebElement getSuccessfulOrder() {
+        WebElement message = driver.findElement(messageSuccessfulOrder);
         return message;
     }
 
+    //Метод возвращает сообщение об успешном заказе в виде строки (необходимо для проверки)
+    public String getMessageSuccessfulOrder() {
+        String messageText = driver.findElement(messageSuccessfulOrder).getText();
+        return messageText;
+    }
+
+    //Нажимаем на логотип "Самокат"
     public void clickScooterLogo() {
         driver.findElement(scooterLogo).click();
     }

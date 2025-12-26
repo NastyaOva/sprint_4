@@ -8,164 +8,102 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
-
+//Класс главной страницы Яндекс Самокат
 public class MainPage {
 
     private WebDriver driver;
 
-    //локатор URL
+    //Локатор URL
     private static final String URL = "https://qa-scooter.praktikum-services.ru/";
 
-    //Test_1
-    //кнопка куки
+    //Кнопка куки
     private By cookieButton = By.id("rcc-confirm-button");
 
-    //кнопки "Вопросы о важном"
-    private By questionPayment = By.id("accordion__heading-0");
-    private By questionSeveralscooters = By.id("accordion__heading-1");
-    private By questionRentaltime = By.id("accordion__heading-2");
-    private By questionOrderforToday = By.id("accordion__heading-3");
-    private By questionOrder = By.id("accordion__heading-4");
-    private By questionCharging = By.id("accordion__heading-5");
-    private By questionOrdercancellation = By.id("accordion__heading-6");
-    private By questionOrdermkad = By.id("accordion__heading-7");
+    //Кнопки "Вопросы о важном"
+    private By questionBtn(int numberQuestion) {
+        return By.id("accordion__heading-" + numberQuestion);
+    }
 
-    //массив кнопок
-    private By[] buttons = {questionPayment, questionSeveralscooters, questionRentaltime, questionOrderforToday, questionOrder, questionCharging, questionOrdercancellation, questionOrdermkad};
+    //Ответ при нажатии на кнопки "Вопросы о важном", номер ответа соответствует номеру вопроса
+    private By answerText(int numberQuestion) {
+        return By.id("accordion__panel-" + numberQuestion);
+    }
 
-    //выпадающий список для каждой кнопки "Вопросы о важном"
-    private By textPayment = By.id("accordion__panel-0");
-    private By textSeveralscooters = By.id("accordion__panel-1");
-    private By textRentaltime = By.id("accordion__panel-2");
-    private By textOrderforToday = By.id("accordion__panel-3");
-    private By textOrder = By.id("accordion__panel-4");
-    private By textCharging = By.id("accordion__panel-5");
-    private By textOrdercancellation = By.id("accordion__panel-6");
-    private By textOrdermkad = By.id("accordion__panel-7");
-
-    //массив ответов на кнопки "Вопрос о важном"
-    private By[] answers = {textPayment, textSeveralscooters, textRentaltime, textOrderforToday, textOrder, textCharging, textOrdercancellation, textOrdermkad};
-
-    //ОР при нажатии на кнопки "Вопросы о важном"
-    private final String[] EXPECTED_TEXT = {
-            "Сутки — 400 рублей. Оплата курьеру — наличными или картой.",
-            "Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим.",
-            "Допустим, вы оформляете заказ на 8 мая. Мы привозим самокат 8 мая в течение дня. Отсчёт времени аренды начинается с момента, когда вы оплатите заказ курьеру. Если мы привезли самокат 8 мая в 20:30, суточная аренда закончится 9 мая в 20:30.",
-            "Только начиная с завтрашнего дня. Но скоро станем расторопнее.",
-            "Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по красивому номеру 1010.",
-            "Самокат приезжает к вам с полной зарядкой. Этого хватает на восемь суток — даже если будете кататься без передышек и во сне. Зарядка не понадобится.",
-            "Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не попросим. Все же свои.",
-            "Да, обязательно. Всем самокатов! И Москве, и Московской области."
-    };
-
-    //ФР при нажатии на кнопки "Вопросы о важном"
-    private String[] result = new String[answers.length];
-
-    //Test_2
-    //кнопка "Заказать" в шапке страницы (точка входа 1)
+    //Кнопка "Заказать" в шапке страницы (точка входа 1)
     private static By orderBtnFirstPoint = By.cssSelector(".Button_Button__ra12g");
 
-    //кнопка "Заказать" в шапке страницы (точка входа 2)
+    //Кнопка "Заказать" в шапке страницы (точка входа 2)
     private static By orderBtnSecondPoint = By.cssSelector(".Button_Button__ra12g.Button_UltraBig__UU3Lp");
-
-    //Доп. задания
-    //ФР нажатия на логотип "Самокат"
-    private String actualUrlScooter;
 
     //ОР нажатия на логотип "Самокат"
     private String expectedUrlScooter = "https://qa-scooter.praktikum-services.ru/";
 
-    //логотип "Яндекс"
+    //Логотип "Яндекс"
     private By yandexLogo = By.xpath(".//img[@alt='Yandex']");
 
-    //ФР нажатия на логотип "Яндекс"
-    private String actualUrlYandex;
-
-    //сохранение первоначального окна
-    private String firstWindow;
-
-    //кнопка "Статус заказа"
+    //Кнопка "Статус заказа"
     private By statusBtn = By.className("Header_Link__1TAG7");
 
-    //поле ввода номера заказа
+    //Поле ввода номера заказа
     private By statusField = By.cssSelector("input[placeholder='Введите номер заказа']");
 
-    //кнопка "Go"
+    //Кнопка "Go"
     private By goBtn = By.xpath("//button[text()='Go!']");
-
 
     public MainPage(WebDriver driver) {
         this.driver = driver;
     }
 
+    //Открываем сайт, если есть баннер с куки, то закрываем его
     public void openPage() {
         driver.get(URL);
-    }
-
-    public void checkCookieButton() {
-        if (driver.findElement(cookieButton).isDisplayed()) {
-            driver.findElement(cookieButton).click();
+        List<WebElement> cookies = driver.findElements(cookieButton);
+        if (!cookies.isEmpty() && cookies.get(0).isDisplayed()) {
+            cookies.get(0).click();
         }
     }
 
-    public void scrollPage() {
-        WebElement element = driver.findElement(questionPayment);
+    //Скроллим страницу до кнопки "Вопросы о важном" и нажимаем на нее
+    public void clickBtnQuestion(int numberQuestion) {
+        WebElement element = driver.findElement(questionBtn(numberQuestion));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
+        element.click();
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(answerText(numberQuestion)));
     }
 
-    public void checkButton() {
-        for (int i = 0; i < buttons.length; i++) {
-            driver.findElement(buttons[i]).click();
-            new WebDriverWait(driver, Duration.ofSeconds(3)).until(ExpectedConditions.visibilityOfElementLocated(answers[i]));
-            result[i] = driver.findElement(answers[i]).getText();
-        }
+    //Метод возвращает фактический текст ответа на вопрос в виде строки при нажатии на кнопку "Вопросы о важном" (необходимо для сравнения ФР и ОР)
+    public String getActualText(int numberQuestion) {
+        String actualText = driver.findElement(answerText(numberQuestion)).getText();
+        return actualText;
     }
 
-    public String[] getResult() {
-        return result;
-    }
-
-    public String[] getEXPECTED_TEXT() {
-        return EXPECTED_TEXT;
-    }
-
-    public static By getOrderBtnFirstPoint() {
-        return orderBtnFirstPoint;
-    }
-
-    public static By getOrderBtnSecondPoint() {
-        return orderBtnSecondPoint;
-    }
-
+    //Нажимаем на кнопку "Заказать" (первая точка входа)
     public void clickOrderBtnFirstPoint() {
         driver.findElement(orderBtnFirstPoint).click();
     }
 
-    public String getActualUrlScooter() {
-        actualUrlScooter = driver.getCurrentUrl();
-        return actualUrlScooter;
+    //Нажимаем на кнопку "Заказать" (вторая точка входа)
+    public void clickOrderBtnSecondPoint() {
+        driver.findElement(orderBtnSecondPoint).click();
     }
 
+    //Метод возвращает фактический URL в виде строки (переход на домашнюю страницу Яндекс Самокат, необходимо для сравнения ФР и ОР)
+    public String getActualUrlScooter() {
+        return driver.getCurrentUrl();
+    }
+
+    //Геттер ОР нажатия на логотип "Самокат" (необходимо для сравнения ФР и ОР)
     public String getExpectedUrlScooter() {
         return expectedUrlScooter;
     }
 
+    //Нажимаем на логотип "Яндекс" и переходим в новое окно (Дзен)
     public void clickYandexLogo() {
+        String firstWindow = driver.getWindowHandle();
         driver.findElement(yandexLogo).click();
-    }
-
-    public void waitWindowYandex() {
         new WebDriverWait(driver, Duration.ofSeconds(10)).until(d -> d.getWindowHandles().size() > 1);
-    }
-
-    public String saveWindow() {
-        firstWindow = driver.getWindowHandle();
-        return firstWindow;
-    }
-
-
-    public void newWindowYandex() {
         for (String windowHandle : driver.getWindowHandles()) {
             if (!firstWindow.equals(windowHandle)) {
                 driver.switchTo().window(windowHandle);
@@ -174,27 +112,28 @@ public class MainPage {
         }
     }
 
-    public void waitUrlYandex() {
-        new WebDriverWait(driver, Duration.ofSeconds(10)).until(d -> d.getCurrentUrl().contains("dzen"));
+    //Ожидаем пока текущий URL будет содержать заданную строку
+    public void waitUrl(String urlFragment) {
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(d -> d.getCurrentUrl().contains(urlFragment));
     }
 
+    //Метод возвращает фактический URL в виде строки (переход на домашнюю страницу Дзен, необходимо для проверки)
     public String getActualUrlYandex() {
-        actualUrlYandex = driver.getCurrentUrl();
-        return actualUrlYandex;
+        return driver.getCurrentUrl();
     }
 
+    //Нажимаем на кнопку "Статус заказа"
     public void clickStatusBtn() {
         driver.findElement(statusBtn).click();
-    }
-
-    public void waitVisibilityField() {
         new WebDriverWait(driver, Duration.ofSeconds(3)).until(ExpectedConditions.visibilityOfElementLocated(statusField));
     }
 
-    public void setNumberOrder(String number) {
+    //Вводим значение в поле ввода номера заказа
+    public void inputNumberOrder(String number) {
         driver.findElement(statusField).sendKeys(number);
     }
 
+    //Нажимаем на кнопку "Go!"
     public void clickGoBtn() {
         driver.findElement(goBtn).click();
     }

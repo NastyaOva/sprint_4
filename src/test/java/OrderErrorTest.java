@@ -7,8 +7,7 @@ public class OrderErrorTest extends BaseTest {
     public void invalidOrderTest() {
         mainPage.openPage();
         mainPage.clickStatusBtn();
-        mainPage.waitVisibilityField();
-        mainPage.setNumberOrder("0000");
+        mainPage.inputNumberOrder("0000");
         mainPage.clickGoBtn();
         orderNumberPage.waitVisibilityImg();
 
